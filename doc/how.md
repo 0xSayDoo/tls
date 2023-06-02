@@ -50,3 +50,12 @@ u_common_test.go
 u_conn_test.go
 u_fingerprinter_test.go
 ~~~
+
+then:
+
+~~~diff
++++ b/common.go
+@@ -21,2 +20,0 @@ import (
+-
+-       "github.com/refraction-networking/utls/cpu"
+~~~
