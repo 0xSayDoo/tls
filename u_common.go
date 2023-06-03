@@ -182,17 +182,6 @@ func utlsMacSHA384(version uint16, key []byte) macFunction {
 	return tls10MAC{h: hmac.New(sha512.New384, key)}
 }
 
-var utlsSupportedCipherSuites []*cipherSuite
-
-func init() {
-	utlsSupportedCipherSuites = append(cipherSuites, []*cipherSuite{
-		{OLD_TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256, 32, 0, 12, ecdheRSAKA,
-			suiteECDHE | suiteTLS12 | suiteDefaultOff, nil, nil, aeadChaCha20Poly1305},
-		{OLD_TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256, 32, 0, 12, ecdheECDSAKA,
-			suiteECDHE | suiteECDSA | suiteTLS12 | suiteDefaultOff, nil, nil, aeadChaCha20Poly1305},
-	}...)
-}
-
 // EnableWeakCiphers allows utls connections to continue in some cases, when weak cipher was chosen.
 // This provides better compatibility with servers on the web, but weakens security. Feel free
 // to use this option if you establish additional secure connection inside of utls connection.
