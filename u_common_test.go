@@ -1,10 +1,8 @@
 package tls
 
 import (
-	"bufio"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -45,27 +43,6 @@ func Test_Builder(t *testing.T) {
 
 func Test_String(t *testing.T) {
 	fmt.Printf("%#v\n", Android_API_26)
-}
-
-type Transport struct {
-	Conn *UConn
-	Spec ClientHelloSpec
-}
-
-func (t *Transport) RoundTrip(req *http.Request) (*http.Response, error) {
-	conf := Config{ServerName: req.URL.Host}
-	conn, err := net.Dial("tcp", req.URL.Host+":443")
-	if err != nil {
-		return nil, err
-	}
-	t.Conn = UClient(conn, &conf, HelloCustom)
-	if err := t.Conn.ApplyPreset(&t.Spec); err != nil {
-		return nil, err
-	}
-	if err := req.Write(t.Conn); err != nil {
-		return nil, err
-	}
-	return http.ReadResponse(bufio.NewReader(t.Conn), req)
 }
 
 func user_info(name string) ([]string, error) {
@@ -114,50 +91,6 @@ func Test_Android(t *testing.T) {
 		t.Fatal(err)
 	}
 	fmt.Println(res.Status)
-}
-
-var Android_API_26 = ClientHelloSpec{
-	CipherSuites: []uint16{
-		TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-		TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
-		TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,
-		TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-		TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
-		TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
-		TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
-		TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
-		TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
-		TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
-		TLS_RSA_WITH_AES_128_GCM_SHA256,
-		TLS_RSA_WITH_AES_256_GCM_SHA384,
-		TLS_RSA_WITH_AES_128_CBC_SHA,
-		TLS_RSA_WITH_AES_256_CBC_SHA,
-	},
-	Extensions: []TLSExtension{
-		&RenegotiationInfoExtension{},
-		&SNIExtension{},
-		&UtlsExtendedMasterSecretExtension{},
-		&SessionTicketExtension{},
-		&SignatureAlgorithmsExtension{
-			SupportedSignatureAlgorithms: []SignatureScheme{
-				ECDSAWithP256AndSHA256,
-			},
-		},
-		&StatusRequestExtension{},
-		&ALPNExtension{
-			AlpnProtocols: []string{"http/1.1"},
-		},
-		&SupportedPointsExtension{
-			SupportedPoints: []uint8{pointFormatUncompressed},
-		},
-		&SupportedCurvesExtension{
-			Curves: []CurveID{
-				X25519,
-				CurveP256,
-				CurveP384,
-			},
-		},
-	},
 }
 
 var Android_Hellos = []string{
