@@ -668,8 +668,7 @@ func (uconn *UConn) ApplyPreset(p *ClientHelloSpec) error {
 
 				ecdheParams, err := generateECDHEParameters(uconn.config.rand(), curveID)
 				if err != nil {
-					return fmt.Errorf("unsupported Curve in KeyShareExtension: %v."+
-						"To mimic it, fill the Data(key) field manually.", curveID)
+					return fmt.Errorf("unsupported Curve in KeyShareExtension: %v. To mimic it, fill the Data(key) field manually", curveID)
 				}
 				ext.KeyShares[i].Data = ecdheParams.PublicKey()
 				if !preferredCurveIsSet {

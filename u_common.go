@@ -4,11 +4,7 @@
 
 package tls
 
-import (
-	"crypto/hmac"
-	"crypto/sha512"
-	"fmt"
-)
+import "fmt"
 
 // Naming convention:
 // Unsupported things are prefixed with "Fake"
@@ -174,27 +170,4 @@ func unGREASEUint16(v uint16) uint16 {
 	} else {
 		return v
 	}
-}
-
-// utlsMacSHA384 returns a SHA-384 based MAC. These are only supported in TLS 1.2
-// so the given version is ignored.
-func utlsMacSHA384(version uint16, key []byte) macFunction {
-	return tls10MAC{h: hmac.New(sha512.New384, key)}
-}
-
-// EnableWeakCiphers allows utls connections to continue in some cases, when weak cipher was chosen.
-// This provides better compatibility with servers on the web, but weakens security. Feel free
-// to use this option if you establish additional secure connection inside of utls connection.
-// This option does not change the shape of parrots (i.e. same ciphers will be offered either way).
-// Must be called before establishing any connections.
-func EnableWeakCiphers() {
-	utlsSupportedCipherSuites = append(cipherSuites, []*cipherSuite{
-		{DISABLED_TLS_RSA_WITH_AES_256_CBC_SHA256, 32, 32, 16, rsaKA,
-			suiteTLS12 | suiteDefaultOff, cipherAES, macSHA256, nil},
-
-		{DISABLED_TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384, 32, 48, 16, ecdheECDSAKA,
-			suiteECDHE | suiteECDSA | suiteTLS12 | suiteDefaultOff | suiteSHA384, cipherAES, utlsMacSHA384, nil},
-		{DISABLED_TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, 32, 48, 16, ecdheRSAKA,
-			suiteECDHE | suiteTLS12 | suiteDefaultOff | suiteSHA384, cipherAES, utlsMacSHA384, nil},
-	}...)
 }

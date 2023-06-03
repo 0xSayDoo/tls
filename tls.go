@@ -10,9 +10,9 @@
 // options) such that it includes "tls13=0".
 package tls
 
-// BUG(agl): The crypto/tls package only implements some countermeasures
-// against Lucky13 attacks on CBC-mode encryption, and only on SHA1
-// variants. See http://www.isg.rhul.ac.uk/tls/TLStiming.pdf and
+// The crypto/tls package only implements some countermeasures against Lucky13
+// attacks on CBC-mode encryption, and only on SHA1 variants. See
+// http://www.isg.rhul.ac.uk/tls/TLStiming.pdf and
 // https://www.imperialviolet.org/2013/02/04/luckythirteen.html.
 
 import (
@@ -23,8 +23,8 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net"
+	"os"
 	"strings"
 	"time"
 )
@@ -181,11 +181,11 @@ func Dial(network, addr string, config *Config) (*Conn, error) {
 // form a certificate chain. On successful return, Certificate.Leaf will
 // be nil because the parsed form of the certificate is not retained.
 func LoadX509KeyPair(certFile, keyFile string) (Certificate, error) {
-	certPEMBlock, err := ioutil.ReadFile(certFile)
+	certPEMBlock, err := os.ReadFile(certFile)
 	if err != nil {
 		return Certificate{}, err
 	}
-	keyPEMBlock, err := ioutil.ReadFile(keyFile)
+	keyPEMBlock, err := os.ReadFile(keyFile)
 	if err != nil {
 		return Certificate{}, err
 	}

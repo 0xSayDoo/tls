@@ -615,6 +615,8 @@ func (c *Conn) readRecordOrCCS(expectChangeCipherSpec bool) error {
 		if err == io.ErrUnexpectedEOF && c.rawInput.Len() == 0 {
 			err = io.EOF
 		}
+		//lint:ignore SA1019 reason
+		// github.com/golang/go/blob/go1.20.4/src/crypto/tls/conn.go#L663
 		if e, ok := err.(net.Error); !ok || !e.Temporary() {
 			c.in.setErrorLocked(err)
 		}
@@ -654,6 +656,8 @@ func (c *Conn) readRecordOrCCS(expectChangeCipherSpec bool) error {
 		return c.in.setErrorLocked(c.newRecordHeaderError(nil, msg))
 	}
 	if err := c.readFromUntil(c.conn, recordHeaderLen+n); err != nil {
+		//lint:ignore SA1019 reason
+		// github.com/golang/go/blob/go1.20.4/src/crypto/tls/conn.go#L663
 		if e, ok := err.(net.Error); !ok || !e.Temporary() {
 			c.in.setErrorLocked(err)
 		}

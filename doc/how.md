@@ -229,3 +229,53 @@ fix:
 -       }...)
 -}
 ~~~
+
+error:
+
+~~~
+cipher_suites.go:338:26: undefined: utlsSupportedCipherSuites
+~~~
+
+fix:
+
+~~~diff
+-for _, suite := range utlsSupportedCipherSuites { // [UTLS]
++for _, suite := range cipherSuites {
+~~~
+
+warning:
+
+~~~
+conn.go:618:40: e.Temporary has been deprecated since Go 1.18 because it
+shouldn't be used: Temporary errors are not well-defined. Most "temporary"
+errors are timeouts, and the few exceptions are surprising. Do not use this
+method.  (SA1019)
+
+conn.go:657:40: e.Temporary has been deprecated since Go 1.18 because it
+shouldn't be used: Temporary errors are not well-defined. Most "temporary"
+errors are timeouts, and the few exceptions are surprising. Do not use this
+method.  (SA1019)
+~~~
+
+fix:
+
+~~~diff
+@@ -617,0 +618,2 @@ func (c *Conn) readRecordOrCCS(expectChangeCipherSpec bool) error {
++               //lint:ignore SA1019 reason
++               // github.com/golang/go/blob/go1.20.4/src/crypto/tls/conn.go#L663
+@@ -656,0 +659,2 @@ func (c *Conn) readRecordOrCCS(expectChangeCipherSpec bool) error {
++               //lint:ignore SA1019 reason
++               // github.com/golang/go/blob/go1.20.4/src/crypto/tls/conn.go#L663
+~~~
+
+warning:
+
+~~~
+key_schedule.go:198:2: curve25519.ScalarMult is deprecated: when provided a
+low-order point, ScalarMult will set dst to all zeroes, irrespective of the
+scalar. Instead, use the X25519 function, which will return an error.  (SA1019)
+~~~
+
+fix:
+
+https://github.com/golang/go/commit/d88d91e3

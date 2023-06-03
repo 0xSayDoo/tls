@@ -174,7 +174,7 @@ func (uconn *UConn) SetSNI(sni string) {
 // It returns an error when used with HelloGolang ClientHelloID
 func (uconn *UConn) RemoveSNIExtension() error {
 	if uconn.ClientHelloID == HelloGolang {
-		return fmt.Errorf("Cannot call RemoveSNIExtension on a UConn with a HelloGolang ClientHelloID")
+		return fmt.Errorf("cannot call RemoveSNIExtension on a UConn with a HelloGolang ClientHelloID")
 	}
 	uconn.omitSNIExtension = true
 	return nil
@@ -441,7 +441,7 @@ func (uconn *UConn) MarshalClientHello() error {
 			if paddingExt == nil {
 				paddingExt = pe
 			} else {
-				return errors.New("Multiple padding extensions!")
+				return errors.New("multiple padding extensions")
 			}
 		}
 	}
@@ -509,7 +509,7 @@ func (uconn *UConn) GetOutKeystream(length int) ([]byte, error) {
 		// AEAD.Seal() does not mutate internal state, other ciphers might
 		return outCipher.Seal(nil, uconn.out.seq[:], zeros, nil), nil
 	}
-	return nil, errors.New("Could not convert OutCipher to cipher.AEAD")
+	return nil, errors.New("could not convert OutCipher to cipher.AEAD")
 }
 
 // SetTLSVers sets min and max TLS version in all appropriate places.
